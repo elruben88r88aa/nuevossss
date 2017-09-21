@@ -17,228 +17,263 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import xbmc
-import xbmcplugin
-import xbmcaddon
-import xbmcgui
+import json
 import urllib
 import urllib2
+from urlparse import urlparse, parse_qs
+import load_channels
+import SocketServer
+import socket
+import SimpleHTTPServer
+import string,cgi,time
+from os import curdir, sep
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+import xbmc
+import xbmcaddon
+import xbmcgui
+import xbmcplugin
+import config
 import re
-import sys
-import os
+import threading
 
-module_log_enabled = False
+addon       = xbmcaddon.Addon()
+addonname   = addon.getAddonInfo('name')
+addondir    = xbmc.translatePath( addon.getAddonInfo('profile') ) 
 
-# Write something on XBMC log
-def log(message):
-    xbmc.log(message)
+portals = None;
+server = None;
 
-# Write this module messages on XBMC log
-def _log(message):
-    if module_log_enabled:
-        xbmc.log("plugintools."+message)
 
-# Parse XBMC params - based on script.module.parsedom addon    
-def get_params():
-    _log("get_params")
-    
-    param_string = sys.argv[2]
-    
-    _log("get_params "+str(param_string))
-    
-    commands = {}
+class TimeoutError(RuntimeError):
+    pass
 
-    if param_string:
-        split_commands = param_string[param_string.find('?') + 1:].split('&')
-    
-        for command in split_commands:
-            _log("get_params command="+str(command))
-            if len(command) > 0:
-                if "=" in command:
-                    split_command = command.split('=')
-                    key = split_command[0]
-                    value = urllib.unquote_plus(split_command[1])
-                    commands[key] = value
-                else:
-                    commands[command] = ""
-    
-    _log("get_params "+repr(commands))
-    return commands
+class AsyncCall(object):
+    def __init__(self, fnc, callback = None):
+        self.Callable = fnc
+        self.Callback = callback
 
-# Fetch text content from an URL
-def read(url):
-    _log("read "+url)
+    def __call__(self, *args, **kwargs):
+        self.Thread = threading.Thread(target = self.run, name = self.Callable.__name__, args = args, kwargs = kwargs)
+        self.Thread.start()
+        return self
 
-    f = urllib2.urlopen(url)
-    data = f.read()
-    f.close()
-    
-    return data
+    def wait(self, timeout = None):
+        self.Thread.join(timeout)
+        if self.Thread.isAlive():
+            raise TimeoutError()
+        else:
+            return self.Result
 
-# Parse string and extracts multiple matches using regular expressions
-def find_multiple_matches(text,pattern):
-    _log("find_multiple_matches pattern="+pattern)
-    
-    matches = re.findall(pattern,text,re.DOTALL)
+    def run(self, *args, **kwargs):
+        self.Result = self.Callable(*args, **kwargs)
+        if self.Callback:
+            self.Callback(self.Result)
 
-    return matches
+class AsyncMethod(object):
+    def __init__(self, fnc, callback=None):
+        self.Callable = fnc
+        self.Callback = callback
 
-# Parse string and extracts first match as a string
-def find_single_match(text,pattern):
-    _log("find_single_match pattern="+pattern)
+    def __call__(self, *args, **kwargs):
+        return AsyncCall(self.Callable, self.Callback)(*args, **kwargs)
 
-    result = ""
-    try:    
-        matches = re.findall(pattern,text, flags=re.DOTALL)
-        result = matches[0]
-    except:
-        result = ""
-
-    return result
-
-def add_item( action="" , title="" , plot="" , url="" ,thumbnail="" , isPlayable = False, folder=True ):
-    _log("add_item action=["+action+"] title=["+title+"] url=["+url+"] thumbnail=["+thumbnail+"] isPlayable=["+str(isPlayable)+"] folder=["+str(folder)+"]")
-
-    listitem = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail )
-    listitem.setInfo( "video", { "Title" : title, "FileName" : title, "Plot" : plot } )
-    
-    if url.startswith("plugin://"):
-        itemurl = url
-        listitem.setProperty('IsPlayable', 'true')
-        xbmcplugin.addDirectoryItem( handle=int(sys.argv[1]), url=itemurl, listitem=listitem, isFolder=folder)
-    elif isPlayable:
-        listitem.setProperty("Video", "true")
-        listitem.setProperty('IsPlayable', 'true')
-        itemurl = '%s?action=%s&title=%s&url=%s&thumbnail=%s&plot=%s' % ( sys.argv[ 0 ] , action , urllib.quote_plus( title ) , urllib.quote_plus(url) , urllib.quote_plus( thumbnail ) , urllib.quote_plus( plot ))
-        xbmcplugin.addDirectoryItem( handle=int(sys.argv[1]), url=itemurl, listitem=listitem, isFolder=folder)
+def Async(fnc = None, callback = None):
+    if fnc == None:
+        def AddAsyncCallback(fnc):
+            return AsyncMethod(fnc, callback)
+        return AddAsyncCallback
     else:
-        itemurl = '%s?action=%s&title=%s&url=%s&thumbnail=%s&plot=%s' % ( sys.argv[ 0 ] , action , urllib.quote_plus( title ) , urllib.quote_plus(url) , urllib.quote_plus( thumbnail ) , urllib.quote_plus( plot ))
-        xbmcplugin.addDirectoryItem( handle=int(sys.argv[1]), url=itemurl, listitem=listitem, isFolder=folder)
+        return AsyncMethod(fnc, callback)
 
-def close_item_list():
-    _log("close_item_list")
 
-    xbmcplugin.endOfDirectory(handle=int(sys.argv[1]), succeeded=True)
+class MyHandler(BaseHTTPRequestHandler):
 
-def play_resolved_url(url):
-    _log("play_resolved_url ["+url+"]")
+    def do_GET(self):
+        global portals, server;
+        
 
-    listitem = xbmcgui.ListItem(path=url)
-    listitem.setProperty('IsPlayable', 'true')
-    return xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
+        try:
+            if re.match('.*channels-([0-9])\..*|.*channels\..*\?portal=([0-9])', self.path):
 
-def direct_play(url):
-    _log("direct_play ["+url+"]")
+            	host = self.headers.get('Host');
 
-    title = ""
 
-    try:
-        xlistitem = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", path=url)
-    except:
-        xlistitem = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", )
-    xlistitem.setInfo( "video", { "Title": title } )
+            	searchObj = re.search('.*channels-([0-9])\..*|.*channels\..*\?portal=([0-9])', self.path);
+            	if searchObj.group(1) != None:
+            		numportal = searchObj.group(1);
+            	elif searchObj.group(2) != None:
+            		numportal = searchObj.group(2);
+            	else:
+            		self.send_error(400,'Bad Request');
+            		return;
+            	
 
-    playlist = xbmc.PlayList( xbmc.PLAYLIST_VIDEO )
-    playlist.clear()
-    playlist.add( url, xlistitem )
+            	portal = portals[numportal];
+            	
+            	EXTM3U = "#EXTM3U\n";
+            	
+            	try:
 
-    player_type = xbmc.PLAYER_CORE_AUTO
-    xbmcPlayer = xbmc.Player( player_type )
-    xbmcPlayer.play(playlist)
+					data = load_channels.getAllChannels(portal['mac'], portal['url'], portal['serial'], addondir);
+					data = load_channels.orderChannels(data['channels'].values());
 
-def get_temp_path():
-    _log("get_temp_path")
+					for i in data:
+						name 		= i["name"];
+						cmd 		= i["cmd"];
+						tmp 		= i["tmp"];
+						number 		= i["number"];
+						genre_title = i["genre_title"];
+						genre_id 	= i["genre_id"];
+						logo 		= i["logo"];
 
-    dev = xbmc.translatePath( "special://temp/" )
-    _log("get_temp_path ->'"+str(dev)+"'")
+						if logo != '':
+							logo = portal['url'] + '/stalker_portal/misc/logos/320/' + logo;
+				
+					
+						parameters = urllib.urlencode( { 'channel' : cmd, 'tmp' : tmp, 'portal' : numportal } );
+					
+						EXTM3U += '#EXTINF:-1, tvg-id="' + number + '" tvg-name="' + name + '" tvg-logo="' + logo + '" group-title="' + genre_title + '", ' + name + '\n';
+						EXTM3U += 'http://' + host + '/live.m3u?'  + parameters +'\n\n';
+					
+            	except Exception as e:
+						EXTM3U += '#EXTINF:-1, tvg-id="Error" tvg-name="Error" tvg-logo="" group-title="Error", ' + portal['name'] + ' ' + str(e) + '\n';
+						EXTM3U += 'http://\n\n';
+        	
+        	
+                self.send_response(200)
+                self.send_header('Content-type',	'application/x-mpegURL')
+                #self.send_header('Content-type',	'text/html')
+                self.send_header('Connection',	'close')
+                self.send_header('Content-Length', len(EXTM3U))
+                self.end_headers()
+                self.wfile.write(EXTM3U.encode('utf-8'))
+                self.finish()
+                
+            elif 'live.m3u' in self.path:
+				
+				args = parse_qs(urlparse(self.path).query);
+				cmd = args['channel'][0];
+				tmp = args['tmp'][0];
+				numportal = args['portal'][0];
+				
+				portal = portals[numportal];
+				
+				url = load_channels.retriveUrl(portal['mac'], portal['url'], portal['serial'], cmd, tmp);
+				
+				self.send_response(301)
+				self.send_header('Location', url)
+				self.end_headers()
+				self.finish()
+                
+            elif 'epg.xml' in self.path:
+				
+				args = parse_qs(urlparse(self.path).query);
+				numportal = args['portal'][0];
+				
+				portal = portals[numportal];
+				
+				try:
+					xml = load_channels.getEPG(portal['mac'], portal['url'], portal['serial'], addondir);
+				except Exception as e:
+					xml  = '<?xml version="1.0" encoding="ISO-8859-1"?>'
+					xml += '<error>' + str(e) + '</error>';
+					
+				
+				self.send_response(200)
+				self.send_header('Content-type',	'txt/xml')
+				self.send_header('Connection',	'close')
+				self.send_header('Content-Length', len(xml))
+				self.end_headers()
+				self.wfile.write(xml)
+				self.finish()
+                 
+            elif 'stop' in self.path:
+				msg = 'Stopping ...';
+            	
+				self.send_response(200)
+				self.send_header('Content-type',	'text/html')
+				self.send_header('Connection',	'close')
+				self.send_header('Content-Length', len(msg))
+				self.end_headers()
+				self.wfile.write(msg.encode('utf-8'))
+                
+				server.socket.close();
+                
+            elif 'online' in self.path:
+				msg = 'Yes. I am.';
+            	
+				self.send_response(200)
+				self.send_header('Content-type',	'text/html')
+				self.send_header('Connection',	'close')
+				self.send_header('Content-Length', len(msg))
+				self.end_headers()
+				self.wfile.write(msg.encode('utf-8'))
 
-    return dev
+            
+            else:
+            	self.send_error(400,'Bad Request');
+            	
+        except IOError:
+            self.send_error(500,'Internal Server Error ' + str(IOError))
 
-def get_runtime_path():
-    _log("get_runtime_path")
 
-    dev = xbmc.translatePath( __settings__.getAddonInfo('Path') )
-    _log("get_runtime_path ->'"+str(dev)+"'")
 
-    return dev
 
-def get_data_path():
-    _log("get_data_path")
+@Async
+def startServer():
+	global portals, server;
+	
+	server_enable = addon.getSetting('server_enable');
+	port = int(addon.getSetting('server_port'));
+	
+	if server_enable != 'true':
+		return;
 
-    dev = xbmc.translatePath( __settings__.getAddonInfo('Profile') )
-    
-    # Parche para XBMC4XBOX
-    if not os.path.exists(dev):
-        os.makedirs(dev)
+	portals = { 
+		'1' : config.portalConfig('1'), 
+		'2' : config.portalConfig('2'), 
+		'3' : config.portalConfig('3') };
 
-    _log("get_data_path ->'"+str(dev)+"'")
+	try:
+		server = SocketServer.TCPServer(('', port), MyHandler);
+		server.serve_forever();
+		
+	except KeyboardInterrupt:
+		if server != None:
+			server.socket.close();
 
-    return dev
+def serverOnline():
+	
+	port = addon.getSetting('server_port');
+	
+	try:
+		url = urllib.urlopen('http://localhost:' + str(port) + '/online');
+		code = url.getcode();
+		
+		if code == 200:
+			return True;
+	
+	except Exception as e:
+		return False;
 
-def get_setting(name):
-    _log("get_setting name='"+name+"'")
+	return False;
 
-    dev = __settings__.getSetting( name )
 
-    _log("get_setting ->'"+str(dev)+"'")
+def stopServer():
+	
+	port = addon.getSetting('server_port');
+	
+	try:
+		url = urllib.urlopen('http://localhost:' + str(port) + '/stop');
+		code = url.getcode();
 
-    return dev
+	except Exception as e:
+		return;
 
-def set_setting(name,value):
-    _log("set_setting name='"+name+"','"+value+"'")
+	return;
 
-    __settings__.setSetting( name,value )
+if __name__ == '__main__':
+	startServer();
+	
 
-def open_settings_dialog():
-    _log("open_settings_dialog")
-
-    __settings__.openSettings()
-
-def get_localized_string(code):
-    _log("get_localized_string code="+str(code))
-
-    dev = __language__(code)
-
-    try:
-        dev = dev.encode("utf-8")
-    except:
-        pass
-
-    _log("get_localized_string ->'"+dev+"'")
-
-    return dev
-
-def keyboard_input(default_text=""):
-    _log("keyboard_input default_text='"+default_text+"'")
-
-    keyboard = xbmc.Keyboard(default_text)
-    keyboard.doModal()
-    
-    if (keyboard.isConfirmed()):
-        tecleado = keyboard.getText()
-    else:
-        tecleado = ""
-
-    _log("keyboard_input ->'"+tecleado+"'")
-
-    return tecleado
-
-def message(text1, text2="", text3=""):
-    if text3=="":
-        xbmcgui.Dialog().ok( text1 , text2)
-    elif text2=="":
-        xbmcgui.Dialog().ok( text1)
-    else:
-        xbmcgui.Dialog().ok( text1 , text2 , text3)
-
-f = open( os.path.join( os.path.dirname(__file__) , "addon.xml") )
-data = f.read()
-f.close()
-
-addon_id = find_single_match(data,'id="([^"]+)"')
-if addon_id=="":
-    addon_id = find_single_match(data,"id='([^']+)'")
-
-__settings__ = xbmcaddon.Addon(id=addon_id)
-__language__ = __settings__.getLocalizedString
-
+        
