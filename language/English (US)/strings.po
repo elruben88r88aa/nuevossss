@@ -1,0 +1,785 @@
+# Addon Name: davinci
+# Addon id: plugin.video.davinci
+# Addon Provider: davinci
+
+msgid ""
+msgstr ""
+"Project-Id-Version: davinci\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2016-08-01 02:03+0000\n"
+"Last-Translator: Soulless\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+msgctxt "#32001"
+msgid "[B][COLOR azure]MOVIES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32002"
+msgid "[B][COLOR azure]TV SHOWS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32003"
+msgid "[B][COLOR azure]MY MOVIES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32004"
+msgid "[B][COLOR azure]MY TV SHOWS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32005"
+msgid "[B][COLOR azure]NEW MOVIES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32006"
+msgid "[B][COLOR azure]NEW EPISODES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32007"
+msgid "[B][COLOR azure]CHANNELS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32008"
+msgid "[B][COLOR azure]TOOLS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32009"
+msgid "[B][COLOR azure]DOWNLOADS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32010"
+msgid "[B][COLOR azure]SEARCH[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32011"
+msgid "[B][COLOR azure]GENRES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32012"
+msgid "[B][COLOR azure]YEAR[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32013"
+msgid "[B][COLOR azure]PEOPLE[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32014"
+msgid "[B][COLOR azure]LANGUAGES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32015"
+msgid "[B][COLOR azure]CERTIFICATES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32016"
+msgid "[B][COLOR azure]NETWORKS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32017"
+msgid "[B][COLOR azure]Watching[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32018"
+msgid "[B][COLOR azure]POPULAR[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32019"
+msgid "[B][COLOR azure]VOTED[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32020"
+msgid "[B][COLOR azure]BOX OFFICE[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32021"
+msgid "[B][COLOR azure]OSCAR WIN[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32022"
+msgid "[B][COLOR azure]THEATERS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32023"
+msgid "[B][COLOR azure]RATED[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32024"
+msgid "[B][COLOR azure]AIRING TODAY[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32025"
+msgid "[B][COLOR azure]RETURNING SERIES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32026"
+msgid "[B][COLOR azure]NEW SERIES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32027"
+msgid "[B][COLOR azure]CALENDAR[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32028"
+msgid "[B][COLOR azure]PEOPLE SEARCH[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32029"
+msgid "[B][COLOR azure]PEOPLE MOVIE LIST[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32030"
+msgid "[B][COLOR azure]PEOPLE SERIE LIST[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32031"
+msgid "[B][COLOR azure]DISCOVER[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32032"
+msgid "[B][COLOR azure]COLLECTION[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32033"
+msgid "[B][COLOR azure]WATCHLIST[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32034"
+msgid "[B][COLOR azure]IMDB[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32035"
+msgid "[B][COLOR azure]FEATURED[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32036"
+msgid "[B][COLOR azure]HISTORY[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32037"
+msgid "[B][COLOR azure]PROGRESS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32038"
+msgid "[B][COLOR azure]EPISODES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32039"
+msgid "[B][COLOR azure]MOVIE LISTS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32040"
+msgid "[B][COLOR azure]SERIES LISTS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32041"
+msgid "[B][COLOR azure]EPISODE LISTS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32042"
+msgid "[B][COLOR azure]No trakt,idmb account [I sorry].[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32043"
+msgid "[B][COLOR dodgerblue]Settings:[/COLOR][COLOR azure]General[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32044"
+msgid "[B][COLOR dodgerblue]Settings:[/COLOR][COLOR azure]Accounts[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32045"
+msgid "[B][COLOR dodgerblue]Settings:[/COLOR][COLOR azure]Playback[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32046"
+msgid "[B][COLOR dodgerblue]Settings:[/COLOR][COLOR azure]Subtitles[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32047"
+msgid "[B][COLOR dodgerblue]Settings:[/COLOR][COLOR azure]Providers[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32048"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] Downloads[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32049"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] Viewtypes[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32050"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] Clear providers...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32051"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] Clear metadata...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32052"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] Clear cache...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32053"
+msgid "[B][COLOR azure]NEXT PAGE[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32054"
+msgid "[B][COLOR azure]SEASONS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32055"
+msgid "[B][COLOR azure]SEASON[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32056"
+msgid "[B][COLOR azure]Are you sure?[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32057"
+msgid "[B][COLOR azure]Process Complete[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32058"
+msgid "[B][COLOR azure]This will slow down things until they are re-cached![/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32059"
+msgid "[B][COLOR azure]CLICK HERE TO SAVE VIEW[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32060"
+msgid "January|February|March|April|May|June|July|August|September|October|November|December"
+msgstr ""
+
+msgctxt "#32061"
+msgid "Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday"
+msgstr ""
+
+msgctxt "#32062"
+msgid "[B]%s[/B] : %s"
+msgstr ""
+
+msgctxt "#32063"
+msgid "[B][COLOR azure]Play using...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32064"
+msgid "[B][COLOR azure]Auto Play[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32065"
+msgid "[B][COLOR azure]Queue item[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32066"
+msgid "[B][COLOR azure]Watched in Davinci[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32067"
+msgid "[B][COLOR azure]Unwatched in Davinci[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32068"
+msgid "[B][COLOR azure]Watched in Trakt[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32069"
+msgid "[B][COLOR azure]Unwatched in Trakt[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32070"
+msgid "[B][COLOR azure]Trakt Manager[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32071"
+msgid "[B][COLOR azure]Browse Series[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32072"
+msgid "[B][COLOR azure]REFRESH[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32073"
+msgid "[B][COLOR azure]HELP[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32074"
+msgid "[B][COLOR azure]HELP[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32301"
+msgid "[B][COLOR azure]ENABLED[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32302"
+msgid "[B][COLOR azure]DISABLED[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32303"
+msgid "[B][COLOR azure]USER[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32304"
+msgid "[B][COLOR azure]EMAIL[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32305"
+msgid "[B][COLOR azure]ID[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32306"
+msgid "[B][COLOR azure]AUTHORIZATION...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32307"
+msgid "[B][COLOR azure]PASSWORD[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32308"
+msgid "[B][COLOR azure]PIN[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32309"
+msgid "[B][COLOR azure]API[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32310"
+msgid "[B][COLOR azure]GENERAL[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32311"
+msgid "[B][COLOR azure]APPEARANCE[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32312"
+msgid "[B][COLOR azure]Providers Timeout[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32313"
+msgid "[B][COLOR azure]INDICATORS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32314"
+msgid "[B][COLOR azure]LOCAL[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32315"
+msgid "[B][COLOR azure]TRAKT[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32316"
+msgid "[B][COLOR azure]Info Language[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32317"
+msgid "[B][COLOR azure]Flatten TV seasons[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32318"
+msgid "[B][COLOR azure]Enable Fanart[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32319"
+msgid "[B][COLOR azure]MENU[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32320"
+msgid "[B][COLOR azure]NEW MOVIES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32321"
+msgid "[B][COLOR azure]FEATURED[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32322"
+msgid "[B][COLOR azure]WATCHING[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32323"
+msgid "[B][COLOR azure]POPULAR[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32324"
+msgid "[B][COLOR azure]THEATERS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32325"
+msgid "[B][COLOR azure]New Episodes[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32326"
+msgid "[B][COLOR azure]EPISODES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32327"
+msgid "[B][COLOR azure]Trakt Progress[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32328"
+msgid "[B][COLOR azure]Trakt Episodes[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32329"
+msgid "[B][COLOR azure]My Lists[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32330"
+msgid "[B][COLOR azure]PLAYBACK[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32331"
+msgid "[B][COLOR azure]Default action[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32332"
+msgid "[B][COLOR azure]DIALOG[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32333"
+msgid "[B][COLOR azure]DIRECTORY[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32334"
+msgid "[B][COLOR azure]Auto Play[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32335"
+msgid "[B][COLOR azure]Progress Dialog[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32336"
+msgid "[B][COLOR azure]FOREGROUND[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32337"
+msgid "[B][COLOR azure]BACKGROUND[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32338"
+msgid "[B][COLOR azure]File Hosting Filters[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32339"
+msgid "[B][COLOR azure]Max Quality[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32340"
+msgid "[B][COLOR azure]SD Hosters in Auto Play[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32341"
+msgid "[B][COLOR azure]Hosters with captchas[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32342"
+msgid "[B][COLOR azure]Sort by Provider[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32343"
+msgid "[B][COLOR azure]When playback starts...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32344"
+msgid "[B][COLOR azure]Resume Playback[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32345"
+msgid "[B][COLOR azure]PROVIDERS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32346"
+msgid "[B][COLOR azure]ACCOUNTS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32347"
+msgid "[B][COLOR azure]DOWNLOADS[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32348"
+msgid "[B][COLOR azure]Enable downloads[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32349"
+msgid "[B][COLOR azure]MOVIES[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32350"
+msgid " [B][COLOR azure]TV[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32351"
+msgid " [B][COLOR azure]Downloading features are disabled by default.[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32352"
+msgid " [B][COLOR azure]Set up your download folders in order to enable them.[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32353"
+msgid " [B][COLOR azure]Subtitles[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32354"
+msgid " [B][COLOR azure]Enable subtitles[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32355"
+msgid " [B][COLOR azure]Convert subtitles to UTF-8"
+msgstr ""
+
+msgctxt "#32356"
+msgid " [B][COLOR azure]Primary Language[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32357"
+msgid " [B][COLOR azure]Secondary Language[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32358"
+msgid " [B][COLOR azure]Subtitles could be unavailable or out of sync.[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32359"
+msgid " [B][COLOR azure]In that case use your own subtitles."
+msgstr ""
+
+msgctxt "#32360"
+msgid " [B][COLOR azure]Providers Language[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32401"
+msgid " [B][COLOR azure]No stream available[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32402"
+msgid " [B][COLOR azure]Playback outside davinci is not allowed[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32403"
+msgid " [B][COLOR azure]Download[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32404"
+msgid " [B][COLOR azure]Time elapsed: %s seconds[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32405"
+msgid " [B][COLOR azure]%s seconds[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32406"
+msgid " [B][COLOR azure]Remaining providers: %s[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32407"
+msgid " [B][COLOR azure]Are you sure?[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32408"
+msgid " [B][COLOR azure]Process Complete[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32501"
+msgid " [B][COLOR azure]Start from beginning[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32502"
+msgid " [B][COLOR azure]Resume from %s[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32503"
+msgid " [B][COLOR azure]Resume[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32511"
+msgid " [B][COLOR azure]An account already exists.[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32512"
+msgid " [B][COLOR azure]Do you want to reset?[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32513"
+msgid "1) Visit : [COLOR azure]%s[/COLOR]"
+msgstr ""
+
+msgctxt "#32514"
+msgid "2) When prompted enter : [COLOR azure]%s[/COLOR]"
+msgstr ""
+
+msgctxt "#32515"
+msgid "Trakt Manager"
+msgstr ""
+
+msgctxt "#32516"
+msgid "Add to [B]COLLECTION[/B]"
+msgstr ""
+
+msgctxt "#32517"
+msgid "Remove from [B]COLLECTION[/B]"
+msgstr ""
+
+msgctxt "#32518"
+msgid "Add to [B]WATCHLIST[/B]"
+msgstr ""
+
+msgctxt "#32519"
+msgid "Remove from [B]WATCHLIST[/B]"
+msgstr ""
+
+msgctxt "#32520"
+msgid "Add to [B]NEW LIST[/B]"
+msgstr ""
+
+msgctxt "#32521"
+msgid "Add to [B]%s[/B]"
+msgstr ""
+
+msgctxt "#32522"
+msgid "Remove from [B]%s[/B]"
+msgstr ""
+
+msgctxt "#32531"
+msgid "An account already exists."
+msgstr ""
+
+msgctxt "#32532"
+msgid "Do you want to reset?"
+msgstr ""
+
+msgctxt "#32533"
+msgid "1) Visit : [COLOR azure]%s[/COLOR]"
+msgstr ""
+
+msgctxt "#32534"
+msgid "2) When prompted enter : [COLOR azure]%s[/COLOR]"
+msgstr ""
+
+msgctxt "#32535"
+msgid "Play Random"
+msgstr ""
+
+msgctxt "#32536"
+msgid "Playing"
+msgstr ""
+
+msgctxt "#32537"
+msgid "Nothing found to play"
+msgstr ""
+
+msgctxt "#32538"
+msgid "DEBRID-SERVICE"
+msgstr ""
+
+msgctxt "#32539"
+msgid "Configure Debrid Services in URLResolver Settings."
+msgstr ""
+
+msgctxt "#32540"
+msgid "URLResolver Settings"
+msgstr ""
+
+msgctxt "#32541"
+msgid "Library"
+msgstr ""
+
+msgctxt "#32542"
+msgid "davinci folders will be imported to library if they are added to media sources."
+msgstr ""
+
+msgctxt "#32543"
+msgid "[B][COLOR azure]Movies[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32544"
+msgid "[B][COLOR azure]TV[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32545"
+msgid "Auto update TV Shows"
+msgstr ""
+
+msgctxt "#32546"
+msgid "Show notifications during update"
+msgstr ""
+
+msgctxt "#32547"
+msgid "Update library after adding content"
+msgstr ""
+
+msgctxt "#32548"
+msgid "Avoid creating duplicate content"
+msgstr ""
+
+msgctxt "#32549"
+msgid "Check movie before adding it"
+msgstr ""
+
+msgctxt "#32550"
+msgid "Check first episode of season before adding it"
+msgstr ""
+
+msgctxt "#32551"
+msgid "Add to Library"
+msgstr ""
+
+msgctxt "#32552"
+msgid "Adding to library..."
+msgstr ""
+
+msgctxt "#32553"
+msgid "Updating TV shows..."
+msgstr ""
+
+msgctxt "#32554"
+msgid "Process Complete"
+msgstr ""
+
+msgctxt "#32555"
+msgid "Are you sure?"
+msgstr ""
+
+msgctxt "#32556"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] Library[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32557"
+msgid "[B]LIBRARY[/B] : Settings"
+msgstr ""
+
+msgctxt "#32558"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] Update library...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32559"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] Movie folder...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32560"
+msgid "[B][COLOR dodgerblue]Davinci:[/COLOR][COLOR azure] TV folder...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32561"
+msgid "[B][COLOR dodgerblue]Trakt:[/COLOR][COLOR azure] Import Collection...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32562"
+msgid "[B][COLOR dodgerblue]Trakt:[/COLOR][COLOR azure] Import Watchlist...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32563"
+msgid "[B][COLOR dodgerblue]Trakt:[/COLOR][COLOR azure] Import TV Collection...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32564"
+msgid "[B][COLOR dodgerblue]Trakt:[/COLOR][COLOR azure] Import TV Watchlist...[/COLOR][/B]"
+msgstr ""
+
+msgctxt "#32565"
+msgid "Include episodes with unknown air dates"
+msgstr ""
