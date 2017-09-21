@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
+'''
     antares Add-on
     Copyright (C) 2016 antares
 
@@ -16,264 +16,385 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-import json
-import urllib
-import urllib2
-from urlparse import urlparse, parse_qs
-import load_channels
-import SocketServer
-import socket
-import SimpleHTTPServer
-import string,cgi,time
-from os import curdir, sep
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-import xbmc
-import xbmcaddon
-import xbmcgui
-import xbmcplugin
-import config
-import re
-import threading
-
-addon       = xbmcaddon.Addon()
-addonname   = addon.getAddonInfo('name')
-addondir    = xbmc.translatePath( addon.getAddonInfo('profile') ) 
-
-portals = None;
-server = None;
+'''
 
 
-class TimeoutError(RuntimeError):
-    pass
+import urlparse,sys,urllib
 
-class AsyncCall(object):
-    def __init__(self, fnc, callback = None):
-        self.Callable = fnc
-        self.Callback = callback
+params = dict(urlparse.parse_qsl(sys.argv[2].replace('?','')))
 
-    def __call__(self, *args, **kwargs):
-        self.Thread = threading.Thread(target = self.run, name = self.Callable.__name__, args = args, kwargs = kwargs)
-        self.Thread.start()
-        return self
+action = params.get('action')
 
-    def wait(self, timeout = None):
-        self.Thread.join(timeout)
-        if self.Thread.isAlive():
-            raise TimeoutError()
-        else:
-            return self.Result
+name = params.get('name')
 
-    def run(self, *args, **kwargs):
-        self.Result = self.Callable(*args, **kwargs)
-        if self.Callback:
-            self.Callback(self.Result)
+title = params.get('title')
 
-class AsyncMethod(object):
-    def __init__(self, fnc, callback=None):
-        self.Callable = fnc
-        self.Callback = callback
+year = params.get('year')
 
-    def __call__(self, *args, **kwargs):
-        return AsyncCall(self.Callable, self.Callback)(*args, **kwargs)
+imdb = params.get('imdb')
 
-def Async(fnc = None, callback = None):
-    if fnc == None:
-        def AddAsyncCallback(fnc):
-            return AsyncMethod(fnc, callback)
-        return AddAsyncCallback
-    else:
-        return AsyncMethod(fnc, callback)
+tvdb = params.get('tvdb')
 
+tmdb = params.get('tmdb')
 
-class MyHandler(BaseHTTPRequestHandler):
+season = params.get('season')
 
-    def do_GET(self):
-        global portals, server;
-        
+episode = params.get('episode')
 
-        try:
-            if re.match('.*channels-([0-9])\..*|.*channels\..*\?portal=([0-9])', self.path):
+tvshowtitle = params.get('tvshowtitle')
 
-            	host = self.headers.get('Host');
+premiered = params.get('premiered')
+
+url = params.get('url')
+
+image = params.get('image')
+
+meta = params.get('meta')
+
+select = params.get('select')
+
+query = params.get('query')
+
+source = params.get('source')
+
+content = params.get('content')
 
 
-            	searchObj = re.search('.*channels-([0-9])\..*|.*channels\..*\?portal=([0-9])', self.path);
-            	if searchObj.group(1) != None:
-            		numportal = searchObj.group(1);
-            	elif searchObj.group(2) != None:
-            		numportal = searchObj.group(2);
-            	else:
-            		self.send_error(400,'Bad Request');
-            		return;
-            	
+if action == None:
+    from resources.lib.indexers import navigator
+    navigator.navigator().root()
 
-            	portal = portals[numportal];
-            	
-            	EXTM3U = "#EXTM3U\n";
-            	
-            	try:
+elif action == 'movieNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().movies()
 
-					data = load_channels.getAllChannels(portal['mac'], portal['url'], portal['serial'], addondir);
-					data = load_channels.orderChannels(data['channels'].values());
+elif action == 'movieliteNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().movies(lite=True)
 
-					for i in data:
-						name 		= i["name"];
-						cmd 		= i["cmd"];
-						tmp 		= i["tmp"];
-						number 		= i["number"];
-						genre_title = i["genre_title"];
-						genre_id 	= i["genre_id"];
-						logo 		= i["logo"];
+elif action == 'mymovieNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().mymovies()
 
-						if logo != '':
-							logo = portal['url'] + '/stalker_portal/misc/logos/320/' + logo;
-				
-					
-						parameters = urllib.urlencode( { 'channel' : cmd, 'tmp' : tmp, 'portal' : numportal } );
-					
-						EXTM3U += '#EXTINF:-1, tvg-id="' + number + '" tvg-name="' + name + '" tvg-logo="' + logo + '" group-title="' + genre_title + '", ' + name + '\n';
-						EXTM3U += 'http://' + host + '/live.m3u?'  + parameters +'\n\n';
-					
-            	except Exception as e:
-						EXTM3U += '#EXTINF:-1, tvg-id="Error" tvg-name="Error" tvg-logo="" group-title="Error", ' + portal['name'] + ' ' + str(e) + '\n';
-						EXTM3U += 'http://\n\n';
-        	
-        	
-                self.send_response(200)
-                self.send_header('Content-type',	'application/x-mpegURL')
-                #self.send_header('Content-type',	'text/html')
-                self.send_header('Connection',	'close')
-                self.send_header('Content-Length', len(EXTM3U))
-                self.end_headers()
-                self.wfile.write(EXTM3U.encode('utf-8'))
-                self.finish()
-                
-            elif 'live.m3u' in self.path:
-				
-				args = parse_qs(urlparse(self.path).query);
-				cmd = args['channel'][0];
-				tmp = args['tmp'][0];
-				numportal = args['portal'][0];
-				
-				portal = portals[numportal];
-				
-				url = load_channels.retriveUrl(portal['mac'], portal['url'], portal['serial'], cmd, tmp);
-				
-				self.send_response(301)
-				self.send_header('Location', url)
-				self.end_headers()
-				self.finish()
-                
-            elif 'epg.xml' in self.path:
-				
-				args = parse_qs(urlparse(self.path).query);
-				numportal = args['portal'][0];
-				
-				portal = portals[numportal];
-				
-				try:
-					xml = load_channels.getEPG(portal['mac'], portal['url'], portal['serial'], addondir);
-				except Exception as e:
-					xml  = '<?xml version="1.0" encoding="ISO-8859-1"?>'
-					xml += '<error>' + str(e) + '</error>';
-					
-				
-				self.send_response(200)
-				self.send_header('Content-type',	'txt/xml')
-				self.send_header('Connection',	'close')
-				self.send_header('Content-Length', len(xml))
-				self.end_headers()
-				self.wfile.write(xml)
-				self.finish()
-                 
-            elif 'stop' in self.path:
-				msg = 'Stopping ...';
-            	
-				self.send_response(200)
-				self.send_header('Content-type',	'text/html')
-				self.send_header('Connection',	'close')
-				self.send_header('Content-Length', len(msg))
-				self.end_headers()
-				self.wfile.write(msg.encode('utf-8'))
-                
-				server.socket.close();
-                
-            elif 'online' in self.path:
-				msg = 'Yes. I am.';
-            	
-				self.send_response(200)
-				self.send_header('Content-type',	'text/html')
-				self.send_header('Connection',	'close')
-				self.send_header('Content-Length', len(msg))
-				self.end_headers()
-				self.wfile.write(msg.encode('utf-8'))
+elif action == 'mymovieliteNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().mymovies(lite=True)
 
-            
+elif action == 'tvNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().tvshows()
+
+elif action == 'tvliteNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().tvshows(lite=True)
+
+elif action == 'mytvNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().mytvshows()
+
+elif action == 'mytvliteNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().mytvshows(lite=True)
+
+elif action == 'playlistNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().playlist()
+
+elif action == 'playlistliteNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().playlist(lite=True)
+
+elif action == 'spikeNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().spike()
+	
+elif action == 'spikeliteNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().spike(lite=True)
+
+elif action == 'customNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().custom()
+	
+elif action == 'customliteNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().custom(lite=True)
+	
+	
+elif action == 'downloadNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().downloads()
+
+elif action == 'libraryNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().library()
+
+elif action == 'toolNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().tools()
+
+elif action == 'searchNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().search()
+
+elif action == 'viewsNavigator':
+    from resources.lib.indexers import navigator
+    navigator.navigator().views()
+
+elif action == 'clearCache':
+    from resources.lib.indexers import navigator
+    navigator.navigator().clearCache()
+
+elif action == 'infoCheck':
+    from resources.lib.indexers import navigator
+    navigator.navigator().infoCheck('')
+
+elif action == 'movies':
+    from resources.lib.indexers import movies
+    movies.movies().get(url)
+
+elif action == 'moviePage':
+    from resources.lib.indexers import movies
+    movies.movies().get(url)
+
+elif action == 'movieWidget':
+    from resources.lib.indexers import movies
+    movies.movies().widget()
+
+elif action == 'movieSearch':
+    from resources.lib.indexers import movies
+    movies.movies().search()
+
+elif action == 'moviePerson':
+    from resources.lib.indexers import movies
+    movies.movies().person()
+
+elif action == 'movieGenres':
+    from resources.lib.indexers import movies
+    movies.movies().genres()
+
+elif action == 'movieLanguages':
+    from resources.lib.indexers import movies
+    movies.movies().languages()
+
+elif action == 'movieCertificates':
+    from resources.lib.indexers import movies
+    movies.movies().certifications()
+
+elif action == 'movieYears':
+    from resources.lib.indexers import movies
+    movies.movies().years()
+
+elif action == 'moviePersons':
+    from resources.lib.indexers import movies
+    movies.movies().persons(url)
+
+elif action == 'movieUserlists':
+    from resources.lib.indexers import movies
+    movies.movies().userlists()
+
+elif action == 'tvshows':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().get(url)
+
+elif action == 'tvshowPage':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().get(url)
+
+elif action == 'tvSearch':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().search()
+
+elif action == 'tvPerson':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().person()
+
+elif action == 'tvGenres':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().genres()
+
+elif action == 'tvNetworks':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().networks()
+
+elif action == 'tvLanguages':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().languages()
+
+elif action == 'tvCertificates':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().certifications()
+
+elif action == 'tvPersons':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().persons(url)
+
+elif action == 'tvUserlists':
+    from resources.lib.indexers import tvshows
+    tvshows.tvshows().userlists()
+
+elif action == 'seasons':
+    from resources.lib.indexers import episodes
+    episodes.seasons().get(tvshowtitle, year, imdb, tvdb)
+
+elif action == 'episodes':
+    from resources.lib.indexers import episodes
+    episodes.episodes().get(tvshowtitle, year, imdb, tvdb, season, episode)
+
+elif action == 'calendar':
+    from resources.lib.indexers import episodes
+    episodes.episodes().calendar(url)
+
+elif action == 'tvWidget':
+    from resources.lib.indexers import episodes
+    episodes.episodes().widget()
+
+elif action == 'calendars':
+    from resources.lib.indexers import episodes
+    episodes.episodes().calendars()
+
+elif action == 'episodeUserlists':
+    from resources.lib.indexers import episodes
+    episodes.episodes().userlists()
+
+elif action == 'refresh':
+    from resources.lib.modules import control
+    control.refresh()
+
+elif action == 'queueItem':
+    from resources.lib.modules import control
+    control.queueItem()
+
+elif action == 'openSettings':
+    from resources.lib.modules import control
+    control.openSettings(query)
+
+elif action == 'artwork':
+    from resources.lib.modules import control
+    control.artwork()
+
+elif action == 'addView':
+    from resources.lib.modules import views
+    views.addView(content)
+
+elif action == 'moviePlaycount':
+    from resources.lib.modules import playcount
+    playcount.movies(imdb, query)
+
+elif action == 'episodePlaycount':
+    from resources.lib.modules import playcount
+    playcount.episodes(imdb, tvdb, season, episode, query)
+
+elif action == 'tvPlaycount':
+    from resources.lib.modules import playcount
+    playcount.tvshows(name, imdb, tvdb, season, query)
+
+elif action == 'trailer':
+    from resources.lib.modules import trailer
+    trailer.trailer().play(name, url)
+
+elif action == 'traktManager':
+    from resources.lib.modules import trakt
+    trakt.manager(name, imdb, tvdb, content)
+
+elif action == 'authTrakt':
+    from resources.lib.modules import trakt
+    trakt.authTrakt()
+
+elif action == 'smuSettings':
+    try: import urlresolver
+    except: pass
+    urlresolver.display_settings()
+
+elif action == 'download':
+    import json
+    from resources.lib.modules import sources
+    from resources.lib.modules import downloader
+    try: downloader.download(name, image, sources.sources().sourcesResolve(json.loads(source)[0], True))
+    except: pass
+
+elif action == 'play':
+    from resources.lib.modules import sources
+    sources.sources().play(title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta, select)
+
+elif action == 'addItem':
+    from resources.lib.modules import sources
+    sources.sources().addItem(title)
+
+elif action == 'playItem':
+    from resources.lib.modules import sources
+    sources.sources().playItem(title, source)
+
+elif action == 'alterSources':
+    from resources.lib.modules import sources
+    sources.sources().alterSources(url, meta)
+
+elif action == 'clearSources':
+    from resources.lib.modules import sources
+    sources.sources().clearSources()
+
+elif action == 'random':
+    rtype = params.get('rtype')
+    if rtype == 'movie':
+        from resources.lib.indexers import movies
+        rlist = movies.movies().get(url, create_directory=False)
+        r = sys.argv[0]+"?action=play"
+    elif rtype == 'episode':
+        from resources.lib.indexers import episodes
+        rlist = episodes.episodes().get(tvshowtitle, year, imdb, tvdb, season, create_directory=False)
+        r = sys.argv[0]+"?action=play"
+    elif rtype == 'season':
+        from resources.lib.indexers import episodes
+        rlist = episodes.seasons().get(tvshowtitle, year, imdb, tvdb, create_directory=False)
+        r = sys.argv[0]+"?action=random&rtype=episode"
+    elif rtype == 'show':
+        from resources.lib.indexers import tvshows
+        rlist = tvshows.tvshows().get(url, create_directory=False)
+        r = sys.argv[0]+"?action=random&rtype=season"
+    from resources.lib.modules import control
+    from random import randint
+    import json
+    try:
+        rand = randint(1,len(rlist))-1
+        for p in ['title','year','imdb','tvdb','season','episode','tvshowtitle','premiered','select']:
+            if rtype == "show" and p == "tvshowtitle":
+                try: r += '&'+p+'='+urllib.quote_plus(rlist[rand]['title'])
+                except: pass
             else:
-            	self.send_error(400,'Bad Request');
-            	
-        except IOError:
-            self.send_error(500,'Internal Server Error ' + str(IOError))
+                try: r += '&'+p+'='+urllib.quote_plus(rlist[rand][p])
+                except: pass
+        try: r += '&meta='+urllib.quote_plus(json.dumps(rlist[rand]))
+        except: r += '&meta='+urllib.quote_plus("{}")
+        if rtype == "movie":
+            try: control.infoDialog(rlist[rand]['title'], control.lang(32536).encode('utf-8'), time=30000)
+            except: pass
+        elif rtype == "episode":
+            try: control.infoDialog(rlist[rand]['tvshowtitle']+" - Season "+rlist[rand]['season']+" - "+rlist[rand]['title'], control.lang(32536).encode('utf-8'), time=30000)
+            except: pass
+        control.execute('RunPlugin(%s)' % r)
+    except:
+        control.infoDialog(control.lang(32537).encode('utf-8'), time=8000)
 
+elif action == 'movieToLibrary':
+    from resources.lib.modules import libtools
+    libtools.libmovies().add(name, title, year, imdb, tmdb)
 
+elif action == 'moviesToLibrary':
+    from resources.lib.modules import libtools
+    libtools.libmovies().range(url)
 
+elif action == 'tvshowToLibrary':
+    from resources.lib.modules import libtools
+    libtools.libtvshows().add(tvshowtitle, year, imdb, tvdb)
 
-@Async
-def startServer():
-	global portals, server;
-	
-	server_enable = addon.getSetting('server_enable');
-	port = int(addon.getSetting('server_port'));
-	
-	if server_enable != 'true':
-		return;
+elif action == 'tvshowsToLibrary':
+    from resources.lib.modules import libtools
+    libtools.libtvshows().range(url)
 
-	portals = { 
-		'1' : config.portalConfig('1'), 
-		'2' : config.portalConfig('2'), 
-		'3' : config.portalConfig('3') };
+elif action == 'updateLibrary':
+    from resources.lib.modules import libtools
+    libtools.libepisodes().update(query)
 
-	try:
-		server = SocketServer.TCPServer(('', port), MyHandler);
-		server.serve_forever();
-		
-	except KeyboardInterrupt:
-		if server != None:
-			server.socket.close();
-
-def serverOnline():
-	
-	port = addon.getSetting('server_port');
-	
-	try:
-		url = urllib.urlopen('http://localhost:' + str(port) + '/online');
-		code = url.getcode();
-		
-		if code == 200:
-			return True;
-	
-	except Exception as e:
-		return False;
-
-	return False;
-
-
-def stopServer():
-	
-	port = addon.getSetting('server_port');
-	
-	try:
-		url = urllib.urlopen('http://localhost:' + str(port) + '/stop');
-		code = url.getcode();
-
-	except Exception as e:
-		return;
-
-	return;
-
-if __name__ == '__main__':
-	startServer();
-	
-
-        
+elif action == 'service':
+    from resources.lib.modules import libtools
+    libtools.libepisodes().service()
